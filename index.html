@@ -1,250 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #1a1a1a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    .clock {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .separator {
-      color: #ff6600;
-      font-size: 3rem;
-      font-weight: bold;
-      margin: 0 4px;
-      margin-bottom: 10px;
-    }
-
-    .flip-group {
-      display: flex;
-      gap: 4px;
-    }
-
-    .flip-card {
-      position: relative;
-      width: 60px;
-      height: 80px;
-      perspective: 300px;
-    }
-
-    .flip-card-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-    }
-
-    .top, .bottom {
-      position: absolute;
-      width: 100%;
-      height: 50%;
-      background: #2a2a2a;
-      display: flex;
-      justify-content: center;
-      overflow: hidden;
-      border-radius: 4px;
-    }
-
-    .top {
-      top: 0;
-      align-items: flex-end;
-      border-bottom: 1px solid #111;
-      z-index: 2;
-    }
-
-    .bottom {
-      bottom: 0;
-      align-items: flex-start;
-      z-index: 1;
-    }
-
-    .top span, .bottom span {
-      font-size: 4rem;
-      font-weight: bold;
-      color: #fff;
-      line-height: 80px;
-      position: absolute;
-      top: -40px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .bottom span {
-      top: 0px;
-    }
-
-    /* Flip animation */
-    .flip-top {
-      position: absolute;
-      width: 100%;
-      height: 50%;
-      top: 0;
-      background: #2a2a2a;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      overflow: hidden;
-      border-radius: 4px 4px 0 0;
-      z-index: 3;
-      transform-origin: bottom center;
-      backface-visibility: hidden;
-    }
-
-    .flip-top span {
-      font-size: 4rem;
-      font-weight: bold;
-      color: #fff;
-      line-height: 80px;
-      position: absolute;
-      top: -40px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .flip-top.flipping {
-      animation: flipTop 0.3s ease-in forwards;
-    }
-
-    @keyframes flipTop {
-      0%   { transform: rotateX(0deg); }
-      100% { transform: rotateX(-90deg); }
-    }
-
-    .flip-bottom-anim {
-      position: absolute;
-      width: 100%;
-      height: 50%;
-      bottom: 0;
-      background: #2a2a2a;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      overflow: hidden;
-      border-radius: 0 0 4px 4px;
-      z-index: 3;
-      transform-origin: top center;
-      transform: rotateX(90deg);
-      backface-visibility: hidden;
-    }
-
-    .flip-bottom-anim span {
-      font-size: 4rem;
-      font-weight: bold;
-      color: #fff;
-      line-height: 80px;
-      position: absolute;
-      top: 0px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .flip-bottom-anim.flipping {
-      animation: flipBottom 0.3s ease-out 0.3s forwards;
-    }
-
-    @keyframes flipBottom {
-      0%   { transform: rotateX(90deg); }
-      100% { transform: rotateX(0deg); }
-    }
-  </style>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#fce4ec;
+  display:flex;justify-content:center;align-items:center;
+  height:100vh;
+}
+#clock{display:flex;align-items:center;gap:10px;}
+.seg{display:flex;gap:6px;}
+.sep{font-size:3rem;font-weight:900;color:#c2185b;align-self:center;}
+.card{
+  width:60px;height:84px;
+  position:relative;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(194,24,91,0.22);
+}
+.half-bot{
+  position:absolute;
+  bottom:0;left:0;right:0;height:50%;
+  background:#f06292;
+  display:flex;align-items:flex-start;justify-content:center;
+  overflow:hidden;
+}
+.half-bot span{
+  font-size:3.4rem;font-weight:900;color:#880e4f;
+  line-height:84px;margin-top:-42px;
+}
+.half-top{
+  position:absolute;
+  top:0;left:0;right:0;height:50%;
+  background:#f8bbd0;
+  display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden;
+  z-index:1;
+}
+.half-top span{
+  font-size:3.4rem;font-weight:900;color:#880e4f;
+  line-height:84px;margin-bottom:-42px;
+}
+.flap{
+  position:absolute;
+  top:0;left:0;right:0;height:50%;
+  background:#f8bbd0;
+  display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden;
+  transform-origin:bottom center;
+  z-index:3;
+}
+.flap span{
+  font-size:3.4rem;font-weight:900;color:#880e4f;
+  line-height:84px;margin-bottom:-42px;
+}
+.flap.go{animation:flipit 0.45s ease-in forwards;}
+@keyframes flipit{
+  0%  {transform:perspective(300px) rotateX(0deg);}
+  100%{transform:perspective(300px) rotateX(-90deg);}
+}
+.divider{
+  position:absolute;top:calc(50% - 1px);left:0;right:0;
+  height:2px;background:#e91e63;opacity:0.4;z-index:10;
+}
+</style>
 </head>
 <body>
-  <div class="clock">
-    <div class="flip-group" id="hours"></div>
-    <div class="separator">:</div>
-    <div class="flip-group" id="minutes"></div>
-    <div class="separator">:</div>
-    <div class="flip-group" id="seconds"></div>
-  </div>
+<div id="clock"></div>
+<script>
+const V={};
+function digit(id){
+  const d=document.createElement('div');
+  d.className='card';d.id=id;
+  d.innerHTML=`
+    <div class="half-bot"><span class="nb">0</span></div>
+    <div class="half-top"><span class="ct">0</span></div>
+    <div class="flap"><span class="fl">0</span></div>
+    <div class="divider"></div>
+  `;
+  V[id]='0';return d;
+}
+function grp(ids){
+  const g=document.createElement('div');g.className='seg';
+  ids.forEach(id=>g.appendChild(digit(id)));return g;
+}
+function sep(){
+  const s=document.createElement('div');s.className='sep';s.textContent=':';return s;
+}
+const cl=document.getElementById('clock');
+cl.appendChild(grp(['h0','h1']));cl.appendChild(sep());
+cl.appendChild(grp(['m0','m1']));cl.appendChild(sep());
+cl.appendChild(grp(['s0','s1']));
 
-  <script>
-    function createFlipCard(container, id) {
-      const card = document.createElement('div');
-      card.className = 'flip-card';
-      card.id = id;
-      card.innerHTML = `
-        <div class="top"><span class="cur">0</span></div>
-        <div class="bottom"><span class="cur">0</span></div>
-        <div class="flip-top"><span class="old">0</span></div>
-        <div class="flip-bottom-anim"><span class="next">0</span></div>
-      `;
-      container.appendChild(card);
-      return card;
-    }
-
-    function initClock() {
-      const hoursEl = document.getElementById('hours');
-      const minutesEl = document.getElementById('minutes');
-      const secondsEl = document.getElementById('seconds');
-
-      createFlipCard(hoursEl, 'h1');
-      createFlipCard(hoursEl, 'h2');
-      createFlipCard(minutesEl, 'm1');
-      createFlipCard(minutesEl, 'm2');
-      createFlipCard(secondsEl, 's1');
-      createFlipCard(secondsEl, 's2');
-    }
-
-    function pad(n) { return String(n).padStart(2, '0'); }
-
-    let prev = { h1: -1, h2: -1, m1: -1, m2: -1, s1: -1, s2: -1 };
-
-    function flipCard(id, newVal) {
-      if (prev[id] === newVal) return;
-
-      const card = document.getElementById(id);
-      const topEl = card.querySelector('.top .cur');
-      const botEl = card.querySelector('.bottom .cur');
-      const flipTop = card.querySelector('.flip-top');
-      const flipBot = card.querySelector('.flip-bottom-anim');
-      const oldSpan = flipTop.querySelector('.old');
-      const nextSpan = flipBot.querySelector('.next');
-
-      oldSpan.textContent = prev[id] === -1 ? newVal : prev[id];
-      nextSpan.textContent = newVal;
-
-      topEl.textContent = newVal;
-      botEl.textContent = newVal;
-
-      flipTop.classList.remove('flipping');
-      flipBot.classList.remove('flipping');
-      void flipTop.offsetWidth;
-
-      flipTop.classList.add('flipping');
-      flipBot.classList.add('flipping');
-
-      prev[id] = newVal;
-    }
-
-    function update() {
-      const now = new Date();
-      const h = pad(now.getHours());
-      const m = pad(now.getMinutes());
-      const s = pad(now.getSeconds());
-
-      flipCard('h1', h[0]);
-      flipCard('h2', h[1]);
-      flipCard('m1', m[0]);
-      flipCard('m2', m[1]);
-      flipCard('s1', s[0]);
-      flipCard('s2', s[1]);
-    }
-
-    initClock();
-    update();
-    setInterval(update, 1000);
-  </script>
+function flip(id,nv){
+  if(V[id]===nv)return;
+  const d=document.getElementById(id);
+  d.querySelector('.nb').textContent=nv;
+  d.querySelector('.fl').textContent=V[id];
+  d.querySelector('.ct').textContent=V[id];
+  const flap=d.querySelector('.flap');
+  flap.classList.remove('go');
+  void flap.offsetWidth;
+  flap.classList.add('go');
+  setTimeout(()=>{
+    d.querySelector('.ct').textContent=nv;
+    d.querySelector('.fl').textContent=nv;
+    flap.classList.remove('go');
+    flap.style.transform='';
+  },450);
+  V[id]=nv;
+}
+function tick(){
+  const n=new Date();
+  const h=String(n.getHours()).padStart(2,'0');
+  const m=String(n.getMinutes()).padStart(2,'0');
+  const s=String(n.getSeconds()).padStart(2,'0');
+  flip('h0',h[0]);flip('h1',h[1]);
+  flip('m0',m[0]);flip('m1',m[1]);
+  flip('s0',s[0]);flip('s1',s[1]);
+}
+tick();setInterval(tick,1000);
+</script>
 </body>
 </html>
