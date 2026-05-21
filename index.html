@@ -7,63 +7,25 @@
 body{
   background:#fce4ec;
   display:flex;justify-content:center;align-items:center;
-  height:100vh;
+  height:100vh;font-family:'Arial Black',Arial,sans-serif;
 }
 #clock{display:flex;align-items:center;gap:10px;}
 .seg{display:flex;gap:6px;}
-.sep{font-size:3rem;font-weight:900;color:#c2185b;align-self:center;}
-.card{
-  width:60px;height:84px;
-  position:relative;
-  border-radius:8px;
-  overflow:hidden;
-  box-shadow:0 4px 12px rgba(194,24,91,0.22);
-}
-.half-bot{
-  position:absolute;
-  bottom:0;left:0;right:0;height:50%;
-  background:#f06292;
-  display:flex;align-items:flex-start;justify-content:center;
-  overflow:hidden;
-}
-.half-bot span{
-  font-size:3.4rem;font-weight:900;color:#880e4f;
-  line-height:84px;margin-top:-42px;
-}
-.half-top{
-  position:absolute;
-  top:0;left:0;right:0;height:50%;
-  background:#f8bbd0;
-  display:flex;align-items:flex-end;justify-content:center;
-  overflow:hidden;
-  z-index:1;
-}
-.half-top span{
-  font-size:3.4rem;font-weight:900;color:#880e4f;
-  line-height:84px;margin-bottom:-42px;
-}
-.flap{
-  position:absolute;
-  top:0;left:0;right:0;height:50%;
-  background:#f8bbd0;
-  display:flex;align-items:flex-end;justify-content:center;
-  overflow:hidden;
-  transform-origin:bottom center;
-  z-index:3;
-}
-.flap span{
-  font-size:3.4rem;font-weight:900;color:#880e4f;
-  line-height:84px;margin-bottom:-42px;
-}
-.flap.go{animation:flipit 0.45s ease-in forwards;}
-@keyframes flipit{
-  0%  {transform:perspective(300px) rotateX(0deg);}
-  100%{transform:perspective(300px) rotateX(-90deg);}
-}
-.divider{
-  position:absolute;top:calc(50% - 1px);left:0;right:0;
-  height:2px;background:#e91e63;opacity:0.4;z-index:10;
-}
+.sep{font-size:2.5rem;font-weight:900;color:#c2185b;align-self:center;}
+.card{width:56px;height:76px;position:relative;border-radius:6px;box-shadow:0 3px 10px rgba(194,24,91,0.2);}
+.t{position:absolute;top:0;left:0;right:0;height:50%;background:#f8bbd0;border-radius:6px 6px 0 0;overflow:hidden;}
+.b{position:absolute;bottom:0;left:0;right:0;height:50%;background:#f06292;border-radius:0 0 6px 6px;overflow:hidden;}
+.t span{position:absolute;width:100%;text-align:center;font-size:2.8rem;font-weight:900;color:#880e4f;top:0;line-height:76px;}
+.b span{position:absolute;width:100%;text-align:center;font-size:2.8rem;font-weight:900;color:#880e4f;top:-38px;line-height:76px;}
+.ft{position:absolute;top:0;left:0;right:0;height:50%;background:#f8bbd0;border-radius:6px 6px 0 0;overflow:hidden;transform-origin:bottom center;z-index:3;}
+.ft span{position:absolute;width:100%;text-align:center;font-size:2.8rem;font-weight:900;color:#880e4f;top:0;line-height:76px;}
+.fb{position:absolute;bottom:0;left:0;right:0;height:50%;background:#f06292;border-radius:0 0 6px 6px;overflow:hidden;transform-origin:top center;z-index:3;}
+.fb span{position:absolute;width:100%;text-align:center;font-size:2.8rem;font-weight:900;color:#880e4f;top:-38px;line-height:76px;}
+.ft.go{animation:ftgo 0.35s ease-in 0.35s forwards;}
+@keyframes ftgo{from{transform:perspective(250px) rotateX(0);}to{transform:perspective(250px) rotateX(-90deg);}}
+.fb.go{animation:fbgo 0.35s ease-in forwards;}
+@keyframes fbgo{from{transform:perspective(250px) rotateX(0);}to{transform:perspective(250px) rotateX(90deg);}}
+.div{position:absolute;top:calc(50% - 1px);left:0;right:0;height:2px;background:#e91e63;opacity:0.35;z-index:10;}
 </style>
 </head>
 <body>
@@ -71,54 +33,49 @@ body{
 <script>
 const V={};
 function digit(id){
-  const d=document.createElement('div');
-  d.className='card';d.id=id;
+  const d=document.createElement('div');d.className='card';d.id=id;
   d.innerHTML=`
-    <div class="half-bot"><span class="nb">0</span></div>
-    <div class="half-top"><span class="ct">0</span></div>
-    <div class="flap"><span class="fl">0</span></div>
-    <div class="divider"></div>
+    <div class="t"><span class="ts">0</span></div>
+    <div class="b"><span class="bs">0</span></div>
+    <div class="ft"><span class="fts">0</span></div>
+    <div class="fb"><span class="fbs">0</span></div>
+    <div class="div"></div>
   `;
   V[id]='0';return d;
 }
-function grp(ids){
-  const g=document.createElement('div');g.className='seg';
-  ids.forEach(id=>g.appendChild(digit(id)));return g;
-}
-function sep(){
-  const s=document.createElement('div');s.className='sep';s.textContent=':';return s;
-}
+function grp(ids){const g=document.createElement('div');g.className='seg';ids.forEach(id=>g.appendChild(digit(id)));return g;}
+function sep(){const s=document.createElement('div');s.className='sep';s.textContent=':';return s;}
 const cl=document.getElementById('clock');
 cl.appendChild(grp(['h0','h1']));cl.appendChild(sep());
-cl.appendChild(grp(['m0','m1']));cl.appendChild(sep());
-cl.appendChild(grp(['s0','s1']));
+cl.appendChild(grp(['m0','m1']));
 
 function flip(id,nv){
   if(V[id]===nv)return;
+  const old=V[id];V[id]=nv;
   const d=document.getElementById(id);
-  d.querySelector('.nb').textContent=nv;
-  d.querySelector('.fl').textContent=V[id];
-  d.querySelector('.ct').textContent=V[id];
-  const flap=d.querySelector('.flap');
-  flap.classList.remove('go');
-  void flap.offsetWidth;
-  flap.classList.add('go');
+  d.querySelector('.ts').textContent=old;
+  d.querySelector('.bs').textContent=nv;
+  d.querySelector('.fts').textContent=old;
+  d.querySelector('.fbs').textContent=old;
+  const ft=d.querySelector('.ft'),fb=d.querySelector('.fb');
+  ft.classList.remove('go');fb.classList.remove('go');
+  void fb.offsetWidth;
+  fb.classList.add('go');
+  ft.classList.add('go');
   setTimeout(()=>{
-    d.querySelector('.ct').textContent=nv;
-    d.querySelector('.fl').textContent=nv;
-    flap.classList.remove('go');
-    flap.style.transform='';
-  },450);
-  V[id]=nv;
+    ft.classList.remove('go');fb.classList.remove('go');
+    ft.style.transform='';fb.style.transform='';
+    d.querySelector('.ts').textContent=nv;
+    d.querySelector('.fts').textContent=nv;
+    d.querySelector('.fbs').textContent=nv;
+  },750);
 }
 function tick(){
   const n=new Date();
   const h=String(n.getHours()).padStart(2,'0');
   const m=String(n.getMinutes()).padStart(2,'0');
-  const s=String(n.getSeconds()).padStart(2,'0');
   flip('h0',h[0]);flip('h1',h[1]);
   flip('m0',m[0]);flip('m1',m[1]);
-  flip('s0',s[0]);flip('s1',s[1]);
 }
 tick();setInterval(tick,1000);
 </script>
