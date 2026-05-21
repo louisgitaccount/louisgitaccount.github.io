@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    #clock {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #37352f;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <div id="clock"></div>
+  <script>
+    function update() {
+      const now = new Date();
+      document.getElementById('clock').textContent =
+        now.toLocaleTimeString('de-DE');
+    }
+    setInterval(update, 1000);
+    update();
+  </script>
+</body>
+</html>
