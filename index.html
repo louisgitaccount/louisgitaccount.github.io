@@ -1,516 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>dhikr — Tasbeeh Counter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>will you marry me</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0d0f14;
-      --accent: #c5a35a;
-      --accent2: #e8c87a;
-      --text: #f0ede8;
-      --muted: #6a6a7a;
-      --ring: rgba(197, 163, 90, 0.3);
-      --success: #6dbf8a;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 28px 20px 36px;
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      touch-action: manipulation;
-    }
-
-    .topbar {
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body { background: #ffe8f0; }
+    .scene {
       width: 100%;
-      max-width: 400px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      padding: 6px;
-      font-size: 1.1rem;
-      line-height: 1;
-      transition: color .2s;
-    }
-
-    .icon-btn:hover { color: var(--accent); }
-
-    .center {
+      min-height: 100svh;
+      background: #ffe8f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 32px;
-    }
-
-    .ring-wrap {
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
       position: relative;
-      width: 300px;
-      height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ring-svg {
-      position: absolute;
-      inset: 0;
-      transform: rotate(-90deg);
-      pointer-events: none;
-    }
-
-    .ring-track { fill: none; stroke: #1e2030; stroke-width: 6; }
-
-    .ring-fill {
-      fill: none;
-      stroke: var(--accent);
-      stroke-width: 6;
-      stroke-linecap: round;
-      stroke-dasharray: 0 1000;
-      transition: stroke-dasharray .3s cubic-bezier(.4,0,.2,1), stroke .4s;
-    }
-
-    .ring-fill.done { stroke: var(--success); }
-
-    .tap-btn {
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, #1e2232, #13151e);
-      border: 1.5px solid #252838;
-      box-shadow: 0 12px 48px rgba(0,0,0,.6), inset 0 1px 6px rgba(255,255,255,.03);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      transition: transform .1s;
-      touch-action: manipulation;
-    }
-
-    .tap-btn:active { transform: scale(0.95); }
-
-    .tap-btn.flash { animation: flash .3s ease-out; }
-
-    @keyframes flash {
-      0%   { box-shadow: 0 12px 48px rgba(0,0,0,.6), 0 0 0 0 var(--ring), inset 0 1px 6px rgba(255,255,255,.03); }
-      50%  { box-shadow: 0 12px 48px rgba(0,0,0,.6), 0 0 0 22px rgba(197,163,90,0), inset 0 1px 6px rgba(255,255,255,.03); }
-      100% { box-shadow: 0 12px 48px rgba(0,0,0,.6), 0 0 0 0 rgba(197,163,90,0), inset 0 1px 6px rgba(255,255,255,.03); }
-    }
-
-    .count-num {
-      font-size: 4.5rem;
-      font-weight: 700;
-      line-height: 1;
-      color: var(--text);
-      font-variant-numeric: tabular-nums;
-      transition: color .3s;
-    }
-
-    .count-num.done { color: var(--success); }
-
-    .count-sub {
-      font-size: 0.85rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-    }
-
-    .dhikr-name {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text);
-      text-align: center;
-      opacity: 0.85;
-    }
-
-    .bottom {
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .sets-line {
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      height: 1rem;
-      text-align: center;
-    }
-
-    .reset-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-      padding: 6px 16px;
-      transition: color .2s;
-    }
-
-    .reset-btn:hover { color: var(--text); }
-
-    /* Settings */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      z-index: 10;
-      align-items: flex-end;
-      justify-content: center;
-    }
-
-    .overlay.open { display: flex; animation: fadein .2s; }
-
-    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
-
-    .panel {
-      background: #161820;
-      border-top: 1px solid #252838;
-      width: 100%;
-      max-width: 480px;
-      padding: 28px 24px 44px;
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-      animation: slideup .22s cubic-bezier(.4,0,.2,1);
-      border-radius: 20px 20px 0 0;
-    }
-
-    @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-    .panel-title { font-size: 1rem; font-weight: 700; color: var(--text); }
-
-    .field { display: flex; flex-direction: column; gap: 8px; }
-
-    .field-lbl {
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .field select, .field input[type="text"], .field input[type="number"] {
-      background: #0d0f14;
-      border: 1px solid #252838;
-      border-radius: 10px;
-      color: var(--text);
-      padding: 11px 14px;
-      font-size: 0.92rem;
-      width: 100%;
-      outline: none;
-      transition: border-color .18s;
-      -webkit-appearance: none;
-    }
-
-    .field select:focus, .field input:focus { border-color: var(--accent); }
-    .field select option { background: #0d0f14; }
-
-    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .chip {
-      padding: 7px 16px;
-      border-radius: 20px;
-      border: 1px solid #252838;
-      background: none;
-      color: var(--muted);
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: all .18s;
-    }
-
-    .chip:hover { color: var(--text); border-color: #3a3d55; }
-    .chip.on { border-color: var(--accent); color: var(--accent); background: rgba(197,163,90,.08); }
-
-    /* Direction toggle */
-    .dir-toggle {
-      display: flex;
-      background: #0d0f14;
-      border: 1px solid #252838;
-      border-radius: 10px;
       overflow: hidden;
     }
-
-    .dir-opt {
-      flex: 1;
-      padding: 11px;
-      border: none;
-      background: none;
-      color: var(--muted);
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: all .18s;
-      font-family: inherit;
+    .hearts-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .fh { position: absolute; animation: floatUp linear infinite; }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh); opacity: 0; }
+      8%   { opacity: 0.6; }
+      92%  { opacity: 0.5; }
+      100% { transform: translateY(-10vh); opacity: 0; }
     }
-
-    .dir-opt.on {
-      background: rgba(197,163,90,.12);
-      color: var(--accent);
+    .ring { font-size: 5rem; display: block; text-align: center; animation: pulse 1.6s ease-in-out infinite; margin-bottom: 1rem; }
+    @keyframes pulse {
+      0%,100% { transform: scale(1) rotate(-4deg); }
+      50%      { transform: scale(1.1) rotate(4deg); }
     }
-
-    .panel-btns { display: flex; gap: 10px; padding-top: 4px; }
-
-    .pbtn {
-      flex: 1;
-      padding: 13px;
-      border-radius: 12px;
-      border: 1px solid #252838;
-      background: none;
-      color: var(--muted);
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .18s;
+    .question { font-family: Georgia, serif; font-size: 2rem; font-weight: bold; color: #111; text-align: center; line-height: 1.25; margin-bottom: 0.3rem; }
+    .question-sub { font-family: Georgia, serif; font-size: 1rem; color: #111; text-align: center; font-style: italic; margin-bottom: 0.6rem; }
+    .sub { font-size: 1.05rem; color: #111; text-align: center; margin-bottom: 2.5rem; line-height: 1.6; font-weight: bold; }
+    .btn-yes {
+      display: block; width: 100%; max-width: 260px;
+      background: #ff6b9d; color: #111111; border: none;
+      border-radius: 999px; padding: 17px; font-size: 1.25rem;
+      font-family: Georgia, serif; font-weight: bold; cursor: pointer;
+      margin: 0 auto; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+      position: relative; z-index: 2;
     }
-
-    .pbtn:hover { color: var(--text); border-color: #3a3d55; }
-
-    .pbtn.primary {
-      background: var(--accent);
-      color: #0d0f14;
-      border-color: var(--accent);
+    #noBtn {
+      position: fixed; background: #ffe8f0; color: #111111;
+      border: 2px solid #ff6b9d; border-radius: 999px; padding: 12px 0;
+      font-size: 1rem; font-family: Georgia, serif; font-weight: bold;
+      cursor: pointer; touch-action: none; z-index: 999; width: 260px; text-align: center;
     }
-
-    .pbtn.primary:hover { background: var(--accent2); border-color: var(--accent2); }
+    .success { display: none; flex-direction: column; align-items: center; gap: 1.2rem; text-align: center; animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+    .success-emoji { font-size: 5rem; }
+    .success-text { font-family: Georgia, serif; font-size: 2rem; color: #111; line-height: 1.3; font-weight: bold; }
+    .success-sub { font-size: 1rem; color: #333; font-style: italic; }
   </style>
 </head>
 <body>
-
-<div class="topbar">
-  <button class="icon-btn" onclick="openSettings()" title="Settings">⚙</button>
-</div>
-
-<div class="center">
-  <div class="ring-wrap">
-    <svg class="ring-svg" viewBox="0 0 300 300">
-      <circle class="ring-track" cx="150" cy="150" r="138"/>
-      <circle class="ring-fill" id="ringFill" cx="150" cy="150" r="138"/>
-    </svg>
-    <button class="tap-btn" id="tapBtn" onclick="tap()" aria-label="Count">
-      <div class="count-num" id="countNum">0</div>
-      <div class="count-sub" id="countSub">of 33</div>
-    </button>
-  </div>
-
-  <div class="dhikr-name" id="dhikrName">SubhanAllah</div>
-</div>
-
-<div class="bottom">
-  <div class="sets-line" id="setsLine"></div>
-  <button class="reset-btn" onclick="reset()">reset</button>
-</div>
-
-<!-- Settings -->
-<div class="overlay" id="overlay" onclick="bgClick(event)">
-  <div class="panel">
-    <div class="panel-title">Settings</div>
-
-    <div class="field">
-      <div class="field-lbl">Dhikr</div>
-      <select id="dhikrSel" onchange="selChange()">
-        <option value="SubhanAllah">SubhanAllah</option>
-        <option value="Alhamdulillah">Alhamdulillah</option>
-        <option value="AllahuAkbar">Allahu Akbar</option>
-        <option value="Astaghfirullah">Astaghfirullah</option>
-        <option value="LaIlahaIllallah">La ilaha illallah</option>
-        <option value="SubhanAllahWabihamdihi">SubhanAllah Wabihamdihi</option>
-        <option value="custom">Custom…</option>
-      </select>
+  <div class="scene">
+    <div class="hearts-bg" id="hbg"></div>
+    <div id="proposal" style="width:100%;max-width:320px;margin:0 auto;position:relative;z-index:2;text-align:center">
+      <span class="ring">💍</span>
+      <div class="question">will you marry me</div>
+      <div class="question-sub">(auf süß aber)</div>
+      <div class="sub">ya habibti, kein Stress aber 😅💍</div>
+      <button class="btn-yes" onclick="sayYes()">Yes! 💖</button>
+      <div id="noAnchor" style="margin-top:1rem;height:50px;"></div>
     </div>
-
-    <div class="field" id="customField" style="display:none">
-      <div class="field-lbl">Custom text</div>
-      <input type="text" id="customIn" placeholder="Enter dhikr" maxlength="60" />
-    </div>
-
-    <div class="field">
-      <div class="field-lbl">Target</div>
-      <div class="chips" id="chips">
-        <button class="chip on" onclick="pickChip(33)">33</button>
-        <button class="chip"    onclick="pickChip(99)">99</button>
-        <button class="chip"    onclick="pickChip(100)">100</button>
-        <button class="chip"    onclick="pickChip(500)">500</button>
-      </div>
-      <input type="number" id="targetIn" value="33" min="1" max="9999" style="margin-top:8px" placeholder="Custom number" oninput="clearChips()" />
-    </div>
-
-    <div class="field">
-      <div class="field-lbl">Direction</div>
-      <div class="dir-toggle">
-        <button class="dir-opt on" id="dirUp" onclick="setDir('up')">Count up</button>
-        <button class="dir-opt"    id="dirDown" onclick="setDir('down')">Count down</button>
-      </div>
-    </div>
-
-    <div class="panel-btns">
-      <button class="pbtn" onclick="resetAll()">Reset all</button>
-      <button class="pbtn primary" onclick="save()">Save</button>
+    <div class="success" id="success">
+      <div class="success-emoji">🥂💍🎉</div>
+      <div class="success-text">Yaaaay!<br>Ich liebe dich!</div>
+      <div class="success-sub">Das schönste Abenteuer<br>eures Lebens beginnt 🌸</div>
     </div>
   </div>
-</div>
 
-<script>
-const C = 2 * Math.PI * 138;
+  <button id="noBtn">No 😊</button>
 
-const DHIKR = {
-  SubhanAllah:            'SubhanAllah',
-  Alhamdulillah:          'Alhamdulillah',
-  AllahuAkbar:            'Allahu Akbar',
-  Astaghfirullah:         'Astaghfirullah',
-  LaIlahaIllallah:        'La ilaha illallah',
-  SubhanAllahWabihamdihi: 'SubhanAllah Wabihamdihi',
-};
+  <script>
+    const syms = ['💖','🌸','🌹','💕','✨','🦋','💗'];
+    const hbg = document.getElementById('hbg');
+    function addHeart(fast) {
+      const h = document.createElement('span');
+      h.className = 'fh';
+      h.textContent = syms[Math.floor(Math.random() * syms.length)];
+      h.style.left = (Math.random() * 100) + '%';
+      h.style.fontSize = (0.9 + Math.random() * 1.3) + 'rem';
+      h.style.animationDuration = (fast ? 2 + Math.random() * 2 : 4 + Math.random() * 5) + 's';
+      h.style.animationDelay = (Math.random() * (fast ? 0.5 : 6)) + 's';
+      hbg.appendChild(h);
+    }
+    for (let i = 0; i < 16; i++) addHeart(false);
 
-let s = {
-  count: 0, sets: 0, target: 33,
-  dhikr: 'SubhanAllah', custom: '',
-  dir: 'up', done: false,
-};
+    const noBtn = document.getElementById('noBtn');
+    const msgs = ['Nein 😅','Nope 🙈','Niemals 😜','Nein nein! 😂','Catch me! 🏃','Haha nein 😝','No way! 🤪'];
+    let attempts = 0;
 
-function tap() {
-  if (s.done) {
-    s.done = false;
-    s.count = s.dir === 'down' ? s.target : 0;
-    document.getElementById('ringFill').classList.remove('done');
-    document.getElementById('countNum').classList.remove('done');
-  }
+    function positionAtStart() {
+      const anchor = document.getElementById('noAnchor');
+      const rect = anchor.getBoundingClientRect();
+      const btnW = noBtn.offsetWidth;
+      noBtn.style.left = (rect.left + rect.width / 2 - btnW / 2) + 'px';
+      noBtn.style.top  = rect.top + 'px';
+    }
 
-  if (s.dir === 'up') {
-    s.count++;
-    if (s.count >= s.target) { s.sets++; s.done = true; }
-  } else {
-    if (s.count > 0) s.count--;
-    if (s.count === 0) { s.sets++; s.done = true; }
-  }
+    function placeNoBtn() {
+      const bw = noBtn.offsetWidth || 260;
+      const bh = noBtn.offsetHeight || 50;
+      const m = 16;
+      const x = m + Math.random() * (window.innerWidth - bw - m * 2);
+      const y = m + Math.random() * (window.innerHeight - bh - m * 2);
+      noBtn.style.left = x + 'px';
+      noBtn.style.top  = y + 'px';
+    }
 
-  const btn = document.getElementById('tapBtn');
-  btn.classList.remove('flash'); void btn.offsetWidth; btn.classList.add('flash');
+    function runAway() {
+      attempts++;
+      noBtn.textContent = msgs[Math.min(attempts - 1, msgs.length - 1)];
+      placeNoBtn();
+    }
 
-  render();
-}
+    noBtn.addEventListener('touchstart', function(e) { e.preventDefault(); runAway(); }, { passive: false });
+    noBtn.addEventListener('mouseover', runAway);
+    setTimeout(positionAtStart, 120);
 
-function reset() {
-  s.count = s.dir === 'down' ? s.target : 0;
-  s.done = false;
-  document.getElementById('ringFill').classList.remove('done');
-  document.getElementById('countNum').classList.remove('done');
-  render();
-}
-
-function resetAll() {
-  s.count = s.dir === 'down' ? s.target : 0;
-  s.sets = 0; s.done = false;
-  document.getElementById('ringFill').classList.remove('done');
-  document.getElementById('countNum').classList.remove('done');
-  close_(); render();
-}
-
-function render() {
-  const { count, target, sets, done, dir } = s;
-
-  document.getElementById('countNum').textContent = count;
-  document.getElementById('dhikrName').textContent = DHIKR[s.dhikr] || s.custom || 'Dhikr';
-
-  if (dir === 'up') {
-    document.getElementById('countSub').textContent = `of ${target}`;
-    const pct = Math.min(count / target, 1);
-    document.getElementById('ringFill').style.strokeDasharray = `${pct * C} ${(1-pct)*C}`;
-  } else {
-    document.getElementById('countSub').textContent = `left`;
-    const pct = Math.min((target - count) / target, 1);
-    document.getElementById('ringFill').style.strokeDasharray = `${pct * C} ${(1-pct)*C}`;
-  }
-
-  if (done) {
-    document.getElementById('ringFill').classList.add('done');
-    document.getElementById('countNum').classList.add('done');
-  }
-
-  document.getElementById('setsLine').textContent =
-    sets > 0 ? `${sets} set${sets > 1 ? 's' : ''} completed` : '';
-}
-
-function openSettings() {
-  document.getElementById('dhikrSel').value = DHIKR[s.dhikr] ? s.dhikr : 'custom';
-  document.getElementById('customField').style.display = s.dhikr === 'custom' ? 'flex' : 'none';
-  document.getElementById('customIn').value = s.custom;
-  document.getElementById('targetIn').value = s.target;
-  syncChips(s.target);
-  document.getElementById('dirUp').classList.toggle('on', s.dir === 'up');
-  document.getElementById('dirDown').classList.toggle('on', s.dir === 'down');
-  document.getElementById('overlay').classList.add('open');
-}
-
-function close_() { document.getElementById('overlay').classList.remove('open'); }
-function bgClick(e) { if (e.target === document.getElementById('overlay')) close_(); }
-
-function save() {
-  const sel = document.getElementById('dhikrSel').value;
-  s.dhikr = sel;
-  if (sel === 'custom') s.custom = document.getElementById('customIn').value.trim() || 'Dhikr';
-  const t = parseInt(document.getElementById('targetIn').value, 10);
-  if (t >= 1 && t <= 9999) s.target = t;
-  // reset count to correct starting point for direction
-  s.count = s.dir === 'down' ? s.target : 0;
-  s.done = false;
-  document.getElementById('ringFill').classList.remove('done');
-  document.getElementById('countNum').classList.remove('done');
-  close_(); render();
-}
-
-function selChange() {
-  document.getElementById('customField').style.display =
-    document.getElementById('dhikrSel').value === 'custom' ? 'flex' : 'none';
-}
-
-function pickChip(n) {
-  document.getElementById('targetIn').value = n;
-  syncChips(n);
-}
-
-function syncChips(active) {
-  document.querySelectorAll('#chips .chip').forEach(c => {
-    c.classList.toggle('on', parseInt(c.textContent) === active);
-  });
-}
-
-function clearChips() { syncChips(null); }
-
-function setDir(d) {
-  s.dir = d;
-  document.getElementById('dirUp').classList.toggle('on', d === 'up');
-  document.getElementById('dirDown').classList.toggle('on', d === 'down');
-}
-
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-  if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); tap(); }
-  if (e.code === 'KeyR') reset();
-});
-
-render();
-</script>
+    function sayYes() {
+      document.getElementById('proposal').style.display = 'none';
+      noBtn.style.display = 'none';
+      const s = document.getElementById('success');
+      s.style.display = 'flex';
+      for (let i = 0; i < 28; i++) addHeart(true);
+    }
+  </script>
 </body>
 </html>
