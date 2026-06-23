@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0.18" y2="1">
+      <stop offset="0"    stop-color="#0a1633"/>
+      <stop offset="0.28" stop-color="#283f78"/>
+      <stop offset="0.48" stop-color="#6f4e93"/>
+      <stop offset="0.66" stop-color="#c2627f"/>
+      <stop offset="0.80" stop-color="#ef9350"/>
+      <stop offset="0.91" stop-color="#ffc879"/>
+      <stop offset="1"    stop-color="#ffe6ac"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.82" cy="0.66" r="0.55">
+      <stop offset="0"    stop-color="#fff3cf" stop-opacity="0.95"/>
+      <stop offset="0.18" stop-color="#ffd089" stop-opacity="0.8"/>
+      <stop offset="0.45" stop-color="#ff9b53" stop-opacity="0.32"/>
+      <stop offset="1"    stop-color="#ff9b53" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bld" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c1220"/>
+      <stop offset="1" stop-color="#04060c"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffb066" stop-opacity="0"/>
+      <stop offset="1" stop-color="#ffcf8f" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1426"/>
+      <stop offset="1" stop-color="#0a0710"/>
+    </linearGradient>
+  </defs>
+
+  <!-- sky + sun -->
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="900" fill="url(#sun)"/>
+  <circle cx="1312" cy="592" r="30" fill="#fff7df"/>
+  <!-- soft clouds -->
+  <g opacity="0.5">
+    <ellipse cx="430" cy="250" rx="240" ry="20" fill="#caa6c8" opacity="0.35"/>
+    <ellipse cx="980" cy="200" rx="300" ry="16" fill="#e7b78e" opacity="0.3"/>
+    <ellipse cx="1230" cy="330" rx="220" ry="14" fill="#ffd9a0" opacity="0.4"/>
+    <ellipse cx="250" cy="360" rx="180" ry="12" fill="#b98fbf" opacity="0.3"/>
+  </g>
+
+  <!-- skyline silhouette -->
+  <path fill="url(#bld)" d="M0,900 L0,646 L52,646 L52,592 L104,592 L104,624 L150,624 L150,540 L196,540 L196,604 L236,604
+    L236,648 L300,648 L300,560 L330,560 L330,512 L372,512 L372,610 L420,610 L420,648 L470,648 L470,500 L506,500 L506,612
+    L556,612 L556,648 L610,648 L610,548 L648,548 L648,470 L690,470 L690,628 L734,628 L734,648 L820,648 L820,560 L858,560
+    L858,632 L905,632 L905,648 L968,648 L968,520 L1004,520 L1004,470 L1044,470 L1044,618 L1092,618 L1092,648 L1150,648
+    L1150,556 L1190,556 L1190,636 L1240,636 L1240,604 L1292,604 L1292,648 L1352,648 L1352,572 L1392,572 L1392,632
+    L1444,632 L1444,648 L1512,648 L1512,596 L1556,596 L1556,646 L1600,646 L1600,900 Z"/>
+
+  <!-- central spire (Burj-style) -->
+  <polygon fill="url(#bld)" points="757,648 783,648 779,360 770,150 763,360"/>
+  <line x1="770" y1="150" x2="770" y2="92" stroke="#0c1220" stroke-width="3"/>
+  <circle cx="770" cy="92" r="3" fill="#ffd9a0" opacity="0.7"/>
+  <!-- a couple of marquee towers with warm rim light on the sun side -->
+  <rect x="1004" y="470" width="40" height="178" fill="url(#bld)"/>
+  <rect x="1040" y="470" width="4" height="178" fill="url(#rim)"/>
+  <rect x="648" y="470" width="42" height="178" fill="url(#bld)"/>
+  <rect x="686" y="470" width="4" height="178" fill="url(#rim)"/>
+  <rect x="470" y="500" width="36" height="148" fill="url(#bld)"/>
+  <rect x="502" y="500" width="4" height="148" fill="url(#rim)"/>
+
+  <!-- window lights (subtle) -->
+  <g fill="#ffd29a" opacity="0.55">
+    <rect x="162" y="556" width="3" height="5"/><rect x="170" y="556" width="3" height="5"/><rect x="178" y="572" width="3" height="5"/>
+    <rect x="312" y="528" width="3" height="5"/><rect x="320" y="544" width="3" height="5"/><rect x="312" y="560" width="3" height="5"/>
+    <rect x="480" y="520" width="3" height="5"/><rect x="490" y="536" width="3" height="5"/><rect x="480" y="556" width="3" height="5"/>
+    <rect x="658" y="492" width="3" height="5"/><rect x="668" y="508" width="3" height="5"/><rect x="658" y="540" width="3" height="5"/>
+    <rect x="766" y="430" width="3" height="5"/><rect x="766" y="470" width="3" height="5"/><rect x="766" y="520" width="3" height="5"/>
+    <rect x="1014" y="492" width="3" height="5"/><rect x="1024" y="508" width="3" height="5"/><rect x="1014" y="548" width="3" height="5"/>
+    <rect x="1162" y="576" width="3" height="5"/><rect x="1172" y="592" width="3" height="5"/>
+    <rect x="1362" y="588" width="3" height="5"/><rect x="1372" y="604" width="3" height="5"/>
+  </g>
+
+  <!-- water / foreground reflection -->
+  <rect x="0" y="648" width="1600" height="252" fill="url(#water)"/>
+  <rect x="1180" y="648" width="260" height="252" fill="url(#sun)" opacity="0.25"/>
+</svg>
